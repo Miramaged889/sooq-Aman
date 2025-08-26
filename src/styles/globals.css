@@ -1,0 +1,64 @@
+@import url("https://fonts.googleapis.com/css2?family=Tajawal:wght@200;300;400;500;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: "Tajawal", "Poppins", sans-serif;
+  }
+
+  body {
+    @apply bg-background text-text;
+  }
+
+  /* RTL Support */
+  [dir="rtl"] {
+    direction: rtl;
+  }
+
+  [dir="ltr"] {
+    direction: ltr;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-secondary text-text font-medium px-6 py-3 rounded-lg hover:opacity-90 focus:ring-2 focus:ring-secondary focus:ring-offset-2 transition-all duration-200;
+  }
+
+  .btn-secondary {
+    @apply border border-primary text-primary font-medium px-6 py-3 rounded-lg hover:bg-primary hover:text-white focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-all duration-200;
+  }
+
+  .btn-outline {
+    @apply border border-gray-300 text-text font-medium px-6 py-3 rounded-lg hover:bg-gray-50 focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-all duration-200;
+  }
+
+  .input-field {
+    @apply w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-all duration-200;
+  }
+
+  .card {
+    @apply bg-white rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200;
+  }
+
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+
+  .badge-sponsored {
+    @apply bg-primary/10 text-primary border border-primary/20;
+  }
+
+  .badge-category {
+    @apply bg-gray-100 text-gray-700;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
