@@ -31,10 +31,12 @@ import {
 import { useI18n } from "../hooks/useI18n.js";
 import { useAds } from "../hooks/useAds.js";
 import { categories } from "../utils/mockData.js";
-import { omanRegions } from "../utils/regionsOM.js";
 import AdCard from "../components/ads/AdCard.jsx";
 import Button from "../components/common/Button.jsx";
+import Container from "../components/layout/Container.jsx";
+import LocationDropdown from "../components/forms/LocationDropdown.jsx";
 import { usePageAnalytics } from "../hooks/useAnalytics.js";
+import { useResponsiveColumns, useDeviceType } from "../hooks/useResponsive.js";
 
 const Home = () => {
   const { t, language } = useI18n();
@@ -42,6 +44,21 @@ const Home = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedLocation, setSelectedLocation] = useState("");
+
+  // Responsive hooks
+  const deviceType = useDeviceType();
+  const categoriesColumns = useResponsiveColumns({
+    minItemWidth: 200,
+    gap: 20,
+    maxCols: 4,
+    containerPadding: 64,
+  });
+  const adsColumns = useResponsiveColumns({
+    minItemWidth: 280,
+    gap: 24,
+    maxCols: 4,
+    containerPadding: 64,
+  });
 
   usePageAnalytics("Home");
 
@@ -154,21 +171,11 @@ const Home = () => {
                     className="w-full pl-10 pr-4 py-3 text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                   />
                 </div>
-                <div className="relative">
-                  <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-                  <select
-                    value={selectedLocation}
-                    onChange={(e) => setSelectedLocation(e.target.value)}
-                    className="pl-10 pr-8 py-3 text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-primary min-w-[200px]"
-                  >
-                    <option value="">{t("hero.locationPlaceholder")}</option>
-                    {omanRegions.map((region) => (
-                      <option key={region.id} value={region.id}>
-                        {region.name[language]}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                <LocationDropdown
+                  value={selectedLocation}
+                  onChange={(e) => setSelectedLocation(e.target.value)}
+                  placeholder={t("hero.locationPlaceholder")}
+                />
                 <Button type="submit" className="px-8">
                   {t("hero.searchButton")}
                 </Button>
@@ -180,19 +187,30 @@ const Home = () => {
 
       {/* Categories Section */}
       <section className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <Container>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             className="text-center mb-12"
           >
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+            <h2
+              className={`font-bold text-gray-900 mb-4 ${
+                deviceType.includes("mobile") ? "text-2xl" : "text-3xl"
+              }`}
+            >
               {t("categories.title")}
             </h2>
           </motion.div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div
+            className="transition-all duration-300 ease-in-out orientation-transition"
+            style={{
+              display: "grid",
+              gridTemplateColumns: `repeat(${categoriesColumns}, 1fr)`,
+              gap: deviceType.includes("mobile") ? "16px" : "24px",
+            }}
+          >
             {categories.map((category, index) => (
               <motion.div
                 key={category.id}
@@ -201,25 +219,41 @@ const Home = () => {
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
                 whileHover={{ y: -5 }}
-                className="bg-white rounded-lg p-6 text-center shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer"
+                className={`bg-white rounded-lg text-center shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer ${
+                  deviceType.includes("mobile") ? "p-4" : "p-6"
+                }`}
                 onClick={() => handleCategoryClick(category.id)}
               >
                 <div
-                  className={`w-16 h-16 ${category.color} rounded-full flex items-center justify-center mx-auto mb-4`}
+                  className={`${
+                    deviceType.includes("mobile")
+                      ? "w-12 h-12 mb-3"
+                      : "w-16 h-16 mb-4"
+                  } ${
+                    category.color
+                  } rounded-full flex items-center justify-center mx-auto`}
                 >
                   {getIconComponent(category.icon)}
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                <h3
+                  className={`font-semibold text-gray-900 mb-2 ${
+                    deviceType.includes("mobile") ? "text-sm" : "text-lg"
+                  }`}
+                >
                   {category.name[language]}
                 </h3>
-                <p className="text-gray-600 text-sm">
+                <p
+                  className={`text-gray-600 ${
+                    deviceType.includes("mobile") ? "text-xs" : "text-sm"
+                  }`}
+                >
                   {category.count.toLocaleString()}{" "}
                   {language === "ar" ? "إعلان" : "ads"}
                 </p>
               </motion.div>
             ))}
           </div>
-        </div>
+        </Container>
       </section>
 
       {/* Featured Ads Section */}
@@ -261,22 +295,39 @@ const Home = () => {
 
       {/* Recent Ads Section */}
       <section className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <Container>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             className="flex justify-between items-center mb-8"
           >
-            <h2 className="text-3xl font-bold text-gray-900">
+            <h2
+              className={`font-bold text-gray-900 ${
+                deviceType.includes("mobile") ? "text-2xl" : "text-3xl"
+              }`}
+            >
               {t("ads.recent")}
             </h2>
-            <Button variant="outline" onClick={() => navigate("/listings")}>
+            <Button
+              variant="outline"
+              onClick={() => navigate("/listings")}
+              className={
+                deviceType.includes("mobile") ? "text-sm px-4 py-2" : ""
+              }
+            >
               {t("ads.viewAll")}
             </Button>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div
+            className="transition-all duration-300 ease-in-out orientation-transition"
+            style={{
+              display: "grid",
+              gridTemplateColumns: `repeat(${adsColumns}, 1fr)`,
+              gap: deviceType.includes("mobile") ? "16px" : "24px",
+            }}
+          >
             {getRecentAds()
               .slice(0, 8)
               .map((ad, index) => (
@@ -291,12 +342,12 @@ const Home = () => {
                 </motion.div>
               ))}
           </div>
-        </div>
+        </Container>
       </section>
 
       {/* CTA Section */}
       <section className="py-16 bg-primary text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <Container className="text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -320,7 +371,7 @@ const Home = () => {
               {t("nav.postAd")}
             </Button>
           </motion.div>
-        </div>
+        </Container>
       </section>
     </div>
   );

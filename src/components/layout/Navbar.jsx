@@ -147,7 +147,7 @@ const Navbar = () => {
                     </Link>
                     <button
                       onClick={handleLogout}
-                      className={`block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center ${
+                      className={` w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center ${
                         isRTL ? "text-right" : "text-left"
                       }`}
                     >

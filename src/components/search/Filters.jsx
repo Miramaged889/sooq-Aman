@@ -2,10 +2,15 @@ import React from "react";
 import { Filter, X } from "lucide-react";
 import { useI18n } from "../../hooks/useI18n.js";
 import { categories } from "../../utils/mockData.js";
-import { omanRegions } from "../../utils/regionsOM.js";
 import Button from "../common/Button.jsx";
+import LocationDropdown from "../forms/LocationDropdown.jsx";
 
-const Filters = ({ filters, onFilterChange, onClearFilters, className = "" }) => {
+const Filters = ({
+  filters,
+  onFilterChange,
+  onClearFilters,
+  className = "",
+}) => {
   const { t, language } = useI18n();
 
   const handleFilterChange = (key, value) => {
@@ -14,7 +19,7 @@ const Filters = ({ filters, onFilterChange, onClearFilters, className = "" }) =>
 
   const handlePriceChange = (type, value) => {
     const newFilters = { ...filters };
-    if (type === 'min') {
+    if (type === "min") {
       newFilters.priceMin = value;
     } else {
       newFilters.priceMax = value;
@@ -22,7 +27,7 @@ const Filters = ({ filters, onFilterChange, onClearFilters, className = "" }) =>
     onFilterChange(newFilters);
   };
 
-  const hasActiveFilters = Object.values(filters).some(value => value !== "");
+  const hasActiveFilters = Object.values(filters).some((value) => value !== "");
 
   return (
     <div className={`bg-white rounded-lg shadow-sm border p-6 ${className}`}>
@@ -71,18 +76,12 @@ const Filters = ({ filters, onFilterChange, onClearFilters, className = "" }) =>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             {t("filters.location")}
           </label>
-          <select
+          <LocationDropdown
             value={filters.location}
             onChange={(e) => handleFilterChange("location", e.target.value)}
-            className="input-field w-full"
-          >
-            <option value="">{t("filters.allLocations")}</option>
-            {omanRegions.map((region) => (
-              <option key={region.id} value={region.id}>
-                {region.name[language]}
-              </option>
-            ))}
-          </select>
+            placeholder={t("filters.allLocations")}
+            className="w-full"
+          />
         </div>
 
         {/* Price Range */}
@@ -111,13 +110,20 @@ const Filters = ({ filters, onFilterChange, onClearFilters, className = "" }) =>
           {(filters.priceMin || filters.priceMax) && (
             <div className="mt-2 text-xs text-gray-500">
               {filters.priceMin && filters.priceMax && (
-                <span>{t("filters.priceRange")}: {filters.priceMin} - {filters.priceMax} OMR</span>
+                <span>
+                  {t("filters.priceRange")}: {filters.priceMin} -{" "}
+                  {filters.priceMax} OMR
+                </span>
               )}
               {filters.priceMin && !filters.priceMax && (
-                <span>{t("filters.minPrice")}: {filters.priceMin} OMR</span>
+                <span>
+                  {t("filters.minPrice")}: {filters.priceMin} OMR
+                </span>
               )}
               {!filters.priceMin && filters.priceMax && (
-                <span>{t("filters.maxPrice")}: {filters.priceMax} OMR</span>
+                <span>
+                  {t("filters.maxPrice")}: {filters.priceMax} OMR
+                </span>
               )}
             </div>
           )}

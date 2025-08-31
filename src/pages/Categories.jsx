@@ -31,10 +31,20 @@ import {
 import { useI18n } from "../hooks/useI18n.js";
 import { categories } from "../utils/mockData.js";
 import { usePageAnalytics } from "../hooks/useAnalytics.js";
+import { useResponsiveColumns, useDeviceType } from "../hooks/useResponsive.js";
 
 const Categories = () => {
   const { t, language } = useI18n();
   const navigate = useNavigate();
+
+  // Responsive hooks for dynamic layout
+  const deviceType = useDeviceType();
+  const columns = useResponsiveColumns({
+    minItemWidth: 250,
+    gap: 24,
+    maxCols: 4,
+    containerPadding: 64,
+  });
 
   usePageAnalytics("Categories");
 
@@ -116,8 +126,15 @@ const Categories = () => {
           </p>
         </motion.div>
 
-        {/* Categories Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+        {/* Categories Grid - Dynamic responsive layout */}
+        <div
+          className="transition-all duration-300 ease-in-out gap-6"
+          style={{
+            display: "grid",
+            gridTemplateColumns: `repeat(${columns}, 1fr)`,
+            gap: deviceType.includes("mobile") ? "16px" : "24px",
+          }}
+        >
           {categories.map((category, index) => (
             <motion.div
               key={category.id}
@@ -125,25 +142,47 @@ const Categories = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
               whileHover={{ y: -8, scale: 1.02 }}
-              className="bg-white rounded-xl p-8 text-center shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer border border-gray-100"
+              className={`bg-white rounded-xl text-center shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer border border-gray-100 ${
+                deviceType.includes("mobile") ? "p-4" : "p-6 md:p-8"
+              }`}
               onClick={() => handleCategoryClick(category.id)}
             >
               <div
-                className={`w-20 h-20 ${category.color} rounded-full flex items-center justify-center mx-auto mb-6`}
+                className={`${
+                  deviceType.includes("mobile")
+                    ? "w-16 h-16 mb-4"
+                    : "w-20 h-20 mb-6"
+                } ${
+                  category.color
+                } rounded-full flex items-center justify-center mx-auto`}
               >
                 {getIconComponent(category.icon)}
               </div>
 
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">
+              <h3
+                className={`font-bold text-gray-900 mb-3 ${
+                  deviceType.includes("mobile")
+                    ? "text-lg"
+                    : "text-xl md:text-2xl"
+                }`}
+              >
                 {category.name[language]}
               </h3>
 
-              <p className="text-gray-600 mb-4">
+              <p
+                className={`text-gray-600 ${
+                  deviceType.includes("mobile") ? "text-sm mb-3" : "mb-4"
+                }`}
+              >
                 {category.count.toLocaleString()}{" "}
                 {language === "ar" ? "إعلان" : "ads"}
               </p>
 
-              <div className="text-primary font-semibold">
+              <div
+                className={`text-primary font-semibold ${
+                  deviceType.includes("mobile") ? "text-sm" : ""
+                }`}
+              >
                 {language === "ar" ? "تصفح الإعلانات" : "Browse Ads"} →
               </div>
             </motion.div>

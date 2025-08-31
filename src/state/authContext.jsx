@@ -37,10 +37,15 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   // Login function with proper error handling
-  const login = useCallback(async (email) => {
-    if (!email) {
-      setError("Email is required");
-      return { success: false, error: "Email is required" };
+  const login = useCallback(async (phone, email, password) => {
+    if (!phone && !email) {
+      setError("Phone number or email is required");
+      return { success: false, error: "Phone number or email is required" };
+    }
+
+    if (!password) {
+      setError("Password is required");
+      return { success: false, error: "Password is required" };
     }
 
     setLoading(true);
@@ -52,9 +57,9 @@ export const AuthProvider = ({ children }) => {
 
       const mockUser = {
         id: "1",
-        email,
+        email: email || "user@example.com",
+        phone: phone || "+968 1234 5678",
         name: "مستخدم تجريبي",
-        phone: "+968 1234 5678",
         verified: true,
         activeAds: 2,
         maxAds: 3,

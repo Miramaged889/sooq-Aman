@@ -6,16 +6,18 @@ import {
   UserPlus,
   User,
   Mail,
-  Phone,
   Lock,
   Eye,
   EyeOff,
   Shield,
   CheckCircle,
+  Phone,
 } from "lucide-react";
 import { useI18n } from "../hooks/useI18n.js";
 import { useAuth } from "../hooks/useAuth.js";
 import FormInput from "../components/forms/FormInput.jsx";
+import PhoneInput from "../components/forms/PhoneInput.jsx";
+import LocationSelector from "../components/forms/LocationSelector.jsx";
 import Button from "../components/common/Button.jsx";
 import Alert from "../components/common/Alert.jsx";
 import { validateEmail } from "../utils/validate.js";
@@ -29,12 +31,14 @@ const Register = () => {
     name: "",
     email: "",
     phone: "",
+    location: { governorate: "", wilayat: "" },
     password: "",
     confirmPassword: "",
   });
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isPhoneVerified, setIsPhoneVerified] = useState(false);
 
   usePageAnalytics("Register");
 
@@ -42,19 +46,50 @@ const Register = () => {
     const newErrors = {};
 
     if (!formData.name.trim()) {
-      newErrors.name = language === "ar" ? "هذا الحقل مطلوب" : "This field is required";
+      newErrors.name =
+        language === "ar" ? "هذا الحقل مطلوب" : "This field is required";
     }
 
     if (!validateEmail(formData.email)) {
-      newErrors.email = language === "ar" ? "يرجى إدخال بريد إلكتروني صحيح" : "Please enter a valid email";
+      newErrors.email =
+        language === "ar"
+          ? "يرجى إدخال بريد إلكتروني صحيح"
+          : "Please enter a valid email";
+    }
+
+    if (!formData.phone || formData.phone.replace(/\s/g, "").length !== 8) {
+      newErrors.phone =
+        language === "ar"
+          ? "يرجى إدخال رقم هاتف صحيح"
+          : "Please enter a valid phone number";
+    }
+
+    if (!isPhoneVerified) {
+      newErrors.phone =
+        language === "ar"
+          ? "يرجى التحقق من رقم الهاتف"
+          : "Please verify your phone number";
+    }
+
+    if (!formData.location.governorate) {
+      newErrors.location =
+        language === "ar"
+          ? "يرجى اختيار المحافظة"
+          : "Please select governorate";
     }
 
     if (formData.password.length < 6) {
-      newErrors.password = language === "ar" ? "كلمة المرور يجب أن تكون 6 أحرف على الأقل" : "Password must be at least 6 characters";
+      newErrors.password =
+        language === "ar"
+          ? "كلمة المرور يجب أن تكون 6 أحرف على الأقل"
+          : "Password must be at least 6 characters";
     }
 
     if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = language === "ar" ? "كلمات المرور غير متطابقة" : "Passwords do not match";
+      newErrors.confirmPassword =
+        language === "ar"
+          ? "كلمات المرور غير متطابقة"
+          : "Passwords do not match";
     }
 
     setErrors(newErrors);
@@ -70,6 +105,7 @@ const Register = () => {
       name: formData.name,
       email: formData.email,
       phone: formData.phone,
+      location: formData.location,
       password: formData.password,
     });
 
@@ -87,10 +123,35 @@ const Register = () => {
     }
   };
 
+  const handleLocationChange = (location) => {
+    setFormData((prev) => ({ ...prev, location }));
+    if (errors.location) {
+      setErrors((prev) => ({ ...prev, location: "" }));
+    }
+  };
+
+  const handlePhoneVerificationStart = async (phoneNumber) => {
+    console.log(`Starting verification for ${phoneNumber}`);
+    // In a real app, call your SMS API here
+    return Promise.resolve();
+  };
+
+  const handlePhoneVerificationComplete = async (success) => {
+    setIsPhoneVerified(success);
+    if (success && errors.phone) {
+      setErrors((prev) => ({ ...prev, phone: "" }));
+    }
+    return Promise.resolve();
+  };
+
   const passwordStrength = formData.password.length >= 6;
 
   return (
-    <div className={`min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 ${language === "ar" ? "rtl" : "ltr"}`}>
+    <div
+      className={`min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 ${
+        language === "ar" ? "rtl" : "ltr"
+      }`}
+    >
       <div className="w-full max-w-6xl">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Left Side - Hero Section */}
@@ -100,19 +161,33 @@ const Register = () => {
             transition={{ duration: 0.8 }}
             className="hidden lg:block"
           >
-            <div className={`text-center lg:${language === "ar" ? "text-right" : "text-left"}`}>
+            <div
+              className={`text-center lg:${
+                language === "ar" ? "text-right" : "text-left"
+              }`}
+            >
               <motion.div
                 initial={{ scale: 0.8 }}
                 animate={{ scale: 1 }}
                 transition={{ delay: 0.2, duration: 0.5 }}
-                className={`w-24 h-24 bg-gradient-to-br from-primary to-purple-600 rounded-full flex items-center justify-center mx-auto ${language === "ar" ? "lg:mr-0" : "lg:ml-0"} mb-6`}
+                className={`w-24 h-24 bg-gradient-to-br from-primary to-purple-600 rounded-full flex items-center justify-center mx-auto ${
+                  language === "ar" ? "lg:mr-0" : "lg:ml-0"
+                } mb-6`}
               >
                 <UserPlus className="h-12 w-12 text-white" />
               </motion.div>
-              <h1 className={`text-4xl lg:text-5xl font-bold text-gray-900 mb-4 ${language === "ar" ? "text-right" : "text-left"}`}>
+              <h1
+                className={`text-4xl lg:text-5xl font-bold text-gray-900 mb-4 ${
+                  language === "ar" ? "text-right" : "text-left"
+                }`}
+              >
                 {language === "ar" ? "انضم إلينا اليوم" : "Join Us Today"}
               </h1>
-              <p className={`text-xl text-gray-600 mb-8 leading-relaxed ${language === "ar" ? "text-right" : "text-left"}`}>
+              <p
+                className={`text-xl text-gray-600 mb-8 leading-relaxed ${
+                  language === "ar" ? "text-right" : "text-left"
+                }`}
+              >
                 {language === "ar"
                   ? "أنشئ حسابك وابدأ في نشر إعلاناتك بسهولة وأمان"
                   : "Create your account and start posting ads easily and securely"}
@@ -120,7 +195,11 @@ const Register = () => {
 
               {/* Features */}
               <div className="space-y-4">
-                <div className={`flex items-center gap-3 ${language === "ar" ? "flex-row" : ""}`}>
+                <div
+                  className={`flex items-center gap-3 ${
+                    language === "ar" ? "flex-row" : ""
+                  }`}
+                >
                   <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
                     <CheckCircle className="h-5 w-5 text-green-600" />
                   </div>
@@ -130,7 +209,11 @@ const Register = () => {
                       : "Free ad posting"}
                   </span>
                 </div>
-                <div className={`flex items-center gap-3 ${language === "ar" ? "flex-row" : ""}`}>
+                <div
+                  className={`flex items-center gap-3 ${
+                    language === "ar" ? "flex-row" : ""
+                  }`}
+                >
                   <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
                     <Shield className="h-5 w-5 text-blue-600" />
                   </div>
@@ -140,7 +223,11 @@ const Register = () => {
                       : "Complete protection & security"}
                   </span>
                 </div>
-                <div className={`flex items-center gap-3 ${language === "ar" ? "flex-row" : ""}`}>
+                <div
+                  className={`flex items-center gap-3 ${
+                    language === "ar" ? "flex-row" : ""
+                  }`}
+                >
                   <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
                     <User className="h-5 w-5 text-purple-600" />
                   </div>
@@ -174,7 +261,9 @@ const Register = () => {
                 {language === "ar" ? "إنشاء حساب جديد" : "Create Account"}
               </h2>
               <p className="text-gray-600">
-                {language === "ar" ? "ابدأ رحلتك معنا اليوم" : "Start your journey with us today"}
+                {language === "ar"
+                  ? "ابدأ رحلتك معنا اليوم"
+                  : "Start your journey with us today"}
               </p>
             </div>
 
@@ -205,7 +294,11 @@ const Register = () => {
                   name="name"
                   value={formData.name}
                   onChange={(e) => handleInputChange("name", e.target.value)}
-                  placeholder={language === "ar" ? "أدخل اسمك الكامل" : "Enter your full name"}
+                  placeholder={
+                    language === "ar"
+                      ? "أدخل اسمك الكامل"
+                      : "Enter your full name"
+                  }
                   error={errors.name}
                   required
                   icon={User}
@@ -218,12 +311,18 @@ const Register = () => {
                 transition={{ delay: 0.2 }}
               >
                 <FormInput
-                  label={language === "ar" ? "البريد الإلكتروني" : "Email Address"}
+                  label={
+                    language === "ar" ? "البريد الإلكتروني" : "Email Address"
+                  }
                   name="email"
                   type="email"
                   value={formData.email}
                   onChange={(e) => handleInputChange("email", e.target.value)}
-                  placeholder={language === "ar" ? "أدخل بريدك الإلكتروني" : "Enter your email address"}
+                  placeholder={
+                    language === "ar"
+                      ? "أدخل بريدك الإلكتروني"
+                      : "Enter your email address"
+                  }
                   error={errors.email}
                   required
                   icon={Mail}
@@ -235,22 +334,34 @@ const Register = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
               >
-                <FormInput
-                  label={language === "ar" ? "رقم الهاتف" : "Phone Number"}
-                  name="phone"
+                <PhoneInput
                   value={formData.phone}
-                  onChange={(e) => handleInputChange("phone", e.target.value)}
-                  placeholder={language === "ar" ? "أدخل رقم هاتفك" : "Enter your phone number"}
+                  onChange={(value) => handleInputChange("phone", value)}
                   error={errors.phone}
                   required
-                  icon={Phone}
+                  showVerification={true}
+                  onVerificationStart={handlePhoneVerificationStart}
+                  onVerificationComplete={handlePhoneVerificationComplete}
                 />
               </motion.div>
 
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
+                transition={{ delay: 0.35 }}
+              >
+                <LocationSelector
+                  value={formData.location}
+                  onChange={handleLocationChange}
+                  error={errors.location}
+                  required
+                />
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.45 }}
               >
                 <div className="relative">
                   <FormInput
@@ -261,7 +372,11 @@ const Register = () => {
                     onChange={(e) =>
                       handleInputChange("password", e.target.value)
                     }
-                    placeholder={language === "ar" ? "أدخل كلمة المرور" : "Enter your password"}
+                    placeholder={
+                      language === "ar"
+                        ? "أدخل كلمة المرور"
+                        : "Enter your password"
+                    }
                     error={errors.password}
                     required
                     icon={Lock}
@@ -269,7 +384,9 @@ const Register = () => {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className={`absolute ${language === "ar" ? "left-3" : "right-3"} top-10 text-gray-400 hover:text-gray-600 transition-colors duration-200`}
+                    className={`absolute ${
+                      language === "ar" ? "left-3" : "right-3"
+                    } top-10 text-gray-400 hover:text-gray-600 transition-colors duration-200`}
                   >
                     {showPassword ? (
                       <EyeOff className="h-5 w-5" />
@@ -279,7 +396,11 @@ const Register = () => {
                   </button>
                 </div>
                 {formData.password && (
-                  <div className={`mt-2 flex items-center gap-2 ${language === "ar" ? "flex-row-reverse" : ""}`}>
+                  <div
+                    className={`mt-2 flex items-center gap-2 ${
+                      language === "ar" ? "flex-row-reverse" : ""
+                    }`}
+                  >
                     <div
                       className={`w-2 h-2 rounded-full ${
                         passwordStrength ? "bg-green-500" : "bg-red-500"
@@ -305,18 +426,26 @@ const Register = () => {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
+                transition={{ delay: 0.55 }}
               >
                 <div className="relative">
                   <FormInput
-                    label={language === "ar" ? "تأكيد كلمة المرور" : "Confirm Password"}
+                    label={
+                      language === "ar"
+                        ? "تأكيد كلمة المرور"
+                        : "Confirm Password"
+                    }
                     name="confirmPassword"
                     type={showConfirmPassword ? "text" : "password"}
                     value={formData.confirmPassword}
                     onChange={(e) =>
                       handleInputChange("confirmPassword", e.target.value)
                     }
-                    placeholder={language === "ar" ? "أعد إدخال كلمة المرور" : "Re-enter your password"}
+                    placeholder={
+                      language === "ar"
+                        ? "أعد إدخال كلمة المرور"
+                        : "Re-enter your password"
+                    }
                     error={errors.confirmPassword}
                     required
                     icon={Lock}
@@ -324,7 +453,9 @@ const Register = () => {
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className={`absolute ${language === "ar" ? "left-3" : "right-3"} top-10 text-gray-400 hover:text-gray-600 transition-colors duration-200`}
+                    className={`absolute ${
+                      language === "ar" ? "left-3" : "right-3"
+                    } top-10 text-gray-400 hover:text-gray-600 transition-colors duration-200`}
                   >
                     {showConfirmPassword ? (
                       <EyeOff className="h-5 w-5" />
@@ -338,7 +469,7 @@ const Register = () => {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6 }}
+                transition={{ delay: 0.65 }}
               >
                 <Button
                   type="submit"
@@ -348,10 +479,13 @@ const Register = () => {
                   disabled={loading}
                 >
                   <UserPlus className="h-5 w-5" />
-                  {loading 
-                    ? (language === "ar" ? "جاري الإنشاء..." : "Creating...")
-                    : (language === "ar" ? "إنشاء حساب" : "Create Account")
-                  }
+                  {loading
+                    ? language === "ar"
+                      ? "جاري الإنشاء..."
+                      : "Creating..."
+                    : language === "ar"
+                    ? "إنشاء حساب"
+                    : "Create Account"}
                 </Button>
               </motion.div>
             </form>
@@ -359,11 +493,13 @@ const Register = () => {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 0.7 }}
+              transition={{ delay: 0.75 }}
               className="mt-8 text-center"
             >
               <p className="text-gray-600">
-                {language === "ar" ? "لديك حساب بالفعل؟" : "Already have an account?"}{" "}
+                {language === "ar"
+                  ? "لديك حساب بالفعل؟"
+                  : "Already have an account?"}{" "}
                 <Link
                   to="/login"
                   className="text-primary hover:text-primary-600 font-medium transition-colors duration-200 hover:underline"

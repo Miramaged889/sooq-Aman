@@ -1,4 +1,10 @@
-import React, { createContext, useState, useEffect, useCallback, useMemo } from "react";
+import React, {
+  createContext,
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+} from "react";
 import ar from "../i18n/ar.json";
 import en from "../i18n/en.json";
 
@@ -14,8 +20,8 @@ const TRANSLATIONS = {
 
 // Language configuration
 const LANGUAGE_CONFIG = {
-  ar: { dir: 'rtl', lang: 'ar' },
-  en: { dir: 'ltr', lang: 'en' },
+  ar: { dir: "rtl", lang: "ar" },
+  en: { dir: "ltr", lang: "en" },
 };
 
 export const I18nProvider = ({ children }) => {
@@ -28,8 +34,8 @@ export const I18nProvider = ({ children }) => {
     }
   });
 
-  const [translations, setTranslations] = useState(() => 
-    TRANSLATIONS[language] || ar
+  const [translations, setTranslations] = useState(
+    () => TRANSLATIONS[language] || ar
   );
 
   // Update document attributes when language changes
@@ -42,20 +48,23 @@ export const I18nProvider = ({ children }) => {
   }, []);
 
   // Change language function with validation
-  const changeLanguage = useCallback((newLanguage) => {
-    if (!TRANSLATIONS[newLanguage]) {
-      console.warn(`Unsupported language: ${newLanguage}`);
-      return;
-    }
+  const changeLanguage = useCallback(
+    (newLanguage) => {
+      if (!TRANSLATIONS[newLanguage]) {
+        console.warn(`Unsupported language: ${newLanguage}`);
+        return;
+      }
 
-    try {
-      setLanguage(newLanguage);
-      localStorage.setItem("LANGUAGE", newLanguage);
-      updateDocumentAttributes(newLanguage);
-    } catch (error) {
-      console.error('Failed to change language:', error);
-    }
-  }, [updateDocumentAttributes]);
+      try {
+        setLanguage(newLanguage);
+        localStorage.setItem("LANGUAGE", newLanguage);
+        updateDocumentAttributes(newLanguage);
+      } catch (error) {
+        console.error("Failed to change language:", error);
+      }
+    },
+    [updateDocumentAttributes]
+  );
 
   // Update translations when language changes
   useEffect(() => {
@@ -67,45 +76,51 @@ export const I18nProvider = ({ children }) => {
   }, [language, updateDocumentAttributes]);
 
   // Translation function with memoization and error handling
-  const t = useCallback((key, params = {}) => {
-    if (!key || typeof key !== 'string') {
-      console.warn('Invalid translation key:', key);
-      return key || '';
-    }
+  const t = useCallback(
+    (key, params = {}) => {
+      if (!key || typeof key !== "string") {
+        console.warn("Invalid translation key:", key);
+        return key || "";
+      }
 
-    try {
-      const keys = key.split(".");
-      let value = translations;
+      try {
+        const keys = key.split(".");
+        let value = translations;
 
-      for (const k of keys) {
-        value = value?.[k];
-        if (value === undefined) {
-          console.warn(`Translation key not found: ${key}`);
-          return key;
+        for (const k of keys) {
+          value = value?.[k];
+          if (value === undefined) {
+            console.warn(`Translation key not found: ${key}`);
+            return key;
+          }
         }
-      }
 
-      if (typeof value === "string") {
-        return Object.keys(params).reduce((str, param) => {
-          return str.replace(new RegExp(`{${param}}`, "g"), params[param]);
-        }, value);
-      }
+        if (typeof value === "string") {
+          return Object.keys(params).reduce((str, param) => {
+            return str.replace(new RegExp(`{${param}}`, "g"), params[param]);
+          }, value);
+        }
 
-      return value || key;
-    } catch (error) {
-      console.error('Translation error:', error);
-      return key;
-    }
-  }, [translations]);
+        return value || key;
+      } catch (error) {
+        console.error("Translation error:", error);
+        return key;
+      }
+    },
+    [translations]
+  );
 
   // Memoized context value
-  const value = useMemo(() => ({
-    language,
-    changeLanguage,
-    t,
-    isRTL: language === "ar",
-    availableLanguages: Object.keys(TRANSLATIONS),
-  }), [language, changeLanguage, t]);
+  const value = useMemo(
+    () => ({
+      language,
+      changeLanguage,
+      t,
+      isRTL: language === "ar",
+      availableLanguages: Object.keys(TRANSLATIONS),
+    }),
+    [language, changeLanguage, t]
+  );
 
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;
 };

@@ -13,6 +13,7 @@ import AdGrid from "../components/ads/AdGrid.jsx";
 import Button from "../components/common/Button.jsx";
 import { usePageAnalytics } from "../hooks/useAnalytics.js";
 
+
 const Listings = () => {
   const { t } = useI18n();
   const { filters, updateFilters, clearFilters, getFilteredAds } = useAds();
