@@ -66,6 +66,12 @@ export const I18nProvider = ({ children }) => {
     [updateDocumentAttributes]
   );
 
+  // Toggle language function
+  const toggleLanguage = useCallback(() => {
+    const newLanguage = language === "ar" ? "en" : "ar";
+    changeLanguage(newLanguage);
+  }, [language, changeLanguage]);
+
   // Update translations when language changes
   useEffect(() => {
     const newTranslations = TRANSLATIONS[language];
@@ -115,11 +121,12 @@ export const I18nProvider = ({ children }) => {
     () => ({
       language,
       changeLanguage,
+      toggleLanguage,
       t,
       isRTL: language === "ar",
       availableLanguages: Object.keys(TRANSLATIONS),
     }),
-    [language, changeLanguage, t]
+    [language, changeLanguage, toggleLanguage, t]
   );
 
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;

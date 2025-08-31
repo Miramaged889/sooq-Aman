@@ -174,7 +174,7 @@ const Home = () => {
                   onChange={(e) => setSelectedLocation(e.target.value)}
                   placeholder={t("hero.locationPlaceholder")}
                 />
-                <Button type="submit" className="px-8">
+                <Button type="submit" className="px-8 text-black">
                   {t("hero.searchButton")}
                 </Button>
               </div>
