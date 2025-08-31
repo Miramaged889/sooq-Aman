@@ -14,7 +14,6 @@ const Login = React.lazy(() => import("../pages/Login.jsx"));
 const Register = React.lazy(() => import("../pages/Register.jsx"));
 const Subscribe = React.lazy(() => import("../pages/Subscribe.jsx"));
 const Profile = React.lazy(() => import("../pages/Profile.jsx"));
-const Commercial = React.lazy(() => import("../pages/Commercial.jsx"));
 
 // Loading component
 const PageLoader = () => (
@@ -97,14 +96,6 @@ const AppRoutes = () => {
           element={
             <PageTransition>
               <Profile />
-            </PageTransition>
-          }
-        />
-        <Route
-          path="/commercial"
-          element={
-            <PageTransition>
-              <Commercial />
             </PageTransition>
           }
         />
