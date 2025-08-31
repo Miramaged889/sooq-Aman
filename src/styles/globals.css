@@ -102,6 +102,12 @@
     }
   }
 
+  /* Mobile bottom navigation spacing */
+  .pb-safe {
+    padding-bottom: calc(env(safe-area-inset-bottom) + 80px);
+  }
+
+
   /* Dynamic viewport units for mobile browsers */
   .min-h-screen-safe {
     min-height: 100vh;

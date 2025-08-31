@@ -47,12 +47,7 @@ const Home = () => {
 
   // Responsive hooks
   const deviceType = useDeviceType();
-  const categoriesColumns = useResponsiveColumns({
-    minItemWidth: 200,
-    gap: 20,
-    maxCols: 4,
-    containerPadding: 64,
-  });
+  const categoriesColumns = 4; // Fixed 4 columns for both mobile and desktop
   const adsColumns = useResponsiveColumns({
     minItemWidth: 280,
     gap: 24,
@@ -76,7 +71,10 @@ const Home = () => {
   };
 
   const getIconComponent = (iconName) => {
-    const iconProps = { size: 24, color: "white" };
+    const iconProps = {
+      size: deviceType.includes("mobile") ? 18 : 20,
+      color: "white",
+    };
     switch (iconName) {
       case "Car":
         return <Car {...iconProps} />;
@@ -207,8 +205,8 @@ const Home = () => {
             className="transition-all duration-300 ease-in-out orientation-transition"
             style={{
               display: "grid",
-              gridTemplateColumns: `repeat(${categoriesColumns}, 1fr)`,
-              gap: deviceType.includes("mobile") ? "16px" : "24px",
+              gridTemplateColumns: "repeat(4, 1fr)",
+              gap: deviceType.includes("mobile") ? "12px" : "20px",
             }}
           >
             {categories.map((category, index) => (
@@ -220,15 +218,15 @@ const Home = () => {
                 transition={{ delay: index * 0.1 }}
                 whileHover={{ y: -5 }}
                 className={`bg-white rounded-lg text-center shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer ${
-                  deviceType.includes("mobile") ? "p-4" : "p-6"
+                  deviceType.includes("mobile") ? "p-3" : "p-4"
                 }`}
                 onClick={() => handleCategoryClick(category.id)}
               >
                 <div
                   className={`${
                     deviceType.includes("mobile")
-                      ? "w-12 h-12 mb-3"
-                      : "w-16 h-16 mb-4"
+                      ? "w-10 h-10 mb-2"
+                      : "w-12 h-12 mb-3"
                   } ${
                     category.color
                   } rounded-full flex items-center justify-center mx-auto`}
@@ -236,15 +234,15 @@ const Home = () => {
                   {getIconComponent(category.icon)}
                 </div>
                 <h3
-                  className={`font-semibold text-gray-900 mb-2 ${
-                    deviceType.includes("mobile") ? "text-sm" : "text-lg"
+                  className={`font-semibold text-gray-900 mb-1 ${
+                    deviceType.includes("mobile") ? "text-xs" : "text-sm"
                   }`}
                 >
                   {category.name[language]}
                 </h3>
                 <p
                   className={`text-gray-600 ${
-                    deviceType.includes("mobile") ? "text-xs" : "text-sm"
+                    deviceType.includes("mobile") ? "text-xs" : "text-xs"
                   }`}
                 >
                   {category.count.toLocaleString()}{" "}
@@ -342,35 +340,6 @@ const Home = () => {
                 </motion.div>
               ))}
           </div>
-        </Container>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-16 bg-primary text-white">
-        <Container className="text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="text-3xl font-bold mb-4">
-              {language === "ar"
-                ? "جاهز لنشر إعلانك؟"
-                : "Ready to post your ad?"}
-            </h2>
-            <p className="text-xl mb-8 text-primary-100">
-              {language === "ar"
-                ? "انضم إلى آلاف المستخدمين الذين يبيعون ويشترون يومياً"
-                : "Join thousands of users buying and selling daily"}
-            </p>
-            <Button
-              variant="secondary"
-              size="lg"
-              onClick={() => navigate("/create")}
-            >
-              {t("nav.postAd")}
-            </Button>
-          </motion.div>
         </Container>
       </section>
     </div>

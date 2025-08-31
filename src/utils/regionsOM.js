@@ -21,9 +21,9 @@ export const omanGovernorates = [
         coordinates: [23.6137, 58.5933],
       },
       {
-        id: "seeb",
-        name: { ar: "السيب", en: "Seeb" },
-        coordinates: [23.6702, 58.1891],
+        id: "amerat",
+        name: { ar: "العامرات", en: "Amerat" },
+        coordinates: [23.35, 58.5833],
       },
       {
         id: "bawshar",
@@ -31,14 +31,14 @@ export const omanGovernorates = [
         coordinates: [23.5557, 58.4008],
       },
       {
+        id: "seeb",
+        name: { ar: "السيب", en: "Seeb" },
+        coordinates: [23.6702, 58.1891],
+      },
+      {
         id: "quriyat",
         name: { ar: "قريات", en: "Quriyat" },
         coordinates: [23.235, 58.9714],
-      },
-      {
-        id: "amerat",
-        name: { ar: "العامرات", en: "Amerat" },
-        coordinates: [23.35, 58.5833],
       },
     ],
   },
@@ -63,19 +63,24 @@ export const omanGovernorates = [
         coordinates: [16.9969, 54.7019],
       },
       {
-        id: "sadah",
-        name: { ar: "سدح", en: "Sadah" },
-        coordinates: [16.7333, 53.2167],
-      },
-      {
         id: "thumrait",
         name: { ar: "ثمريت", en: "Thumrait" },
         coordinates: [17.6667, 54.0167],
       },
       {
+        id: "rakhyut",
+        name: { ar: "رخيوت", en: "Rakhyut" },
+        coordinates: [17.0167, 53.2833],
+      },
+      {
         id: "dhalkut",
         name: { ar: "ضلكوت", en: "Dhalkut" },
         coordinates: [16.7486, 53.2681],
+      },
+      {
+        id: "al_mazyunah",
+        name: { ar: "المزيونة", en: "Al Mazyunah" },
+        coordinates: [16.8667, 52.9667],
       },
       {
         id: "mugshin",
@@ -91,14 +96,9 @@ export const omanGovernorates = [
         coordinates: [17.4833, 55.9667],
       },
       {
-        id: "al_mazyunah",
-        name: { ar: "المزيونة", en: "Al Mazyunah" },
-        coordinates: [16.8667, 52.9667],
-      },
-      {
-        id: "rakhyut",
-        name: { ar: "رخيوت", en: "Rakhyut" },
-        coordinates: [17.0167, 53.2833],
+        id: "sadah",
+        name: { ar: "سدح", en: "Sadah" },
+        coordinates: [16.7333, 53.2167],
       },
     ],
   },
@@ -113,14 +113,14 @@ export const omanGovernorates = [
         coordinates: [26.1798, 56.2517],
       },
       {
-        id: "bukha",
-        name: { ar: "بخاء", en: "Bukha" },
-        coordinates: [26.1333, 56.0667],
-      },
-      {
         id: "daba",
         name: { ar: "دباء", en: "Daba" },
         coordinates: [25.6333, 56.2667],
+      },
+      {
+        id: "bukha",
+        name: { ar: "بخاء", en: "Bukha" },
+        coordinates: [26.1333, 56.0667],
       },
       {
         id: "madha",
@@ -195,6 +195,11 @@ export const omanGovernorates = [
         id: "bidbid",
         name: { ar: "بدبد", en: "Bidbid" },
         coordinates: [23.4167, 58.1167],
+      },
+      {
+        id: "al_jabal_al_akhdar",
+        name: { ar: "الجبل الأخضر", en: "Al Jabal Al Akhdar" },
+        coordinates: [23.0833, 57.65],
       },
     ],
   },
@@ -273,8 +278,8 @@ export const omanGovernorates = [
     ],
   },
   {
-    id: "north_al_sharqiyah",
-    name: { ar: "محافظة شمال الشرقية", en: "North Al Sharqiyah Governorate" },
+    id: "south_al_sharqiyah",
+    name: { ar: "محافظة جنوب الشرقية", en: "South Al Sharqiyah Governorate" },
     coordinates: [22.5667, 59.5289],
     wilayats: [
       {
@@ -288,6 +293,28 @@ export const omanGovernorates = [
         coordinates: [22.6167, 59.3333],
       },
       {
+        id: "jalan_bani_bu_hassan",
+        name: { ar: "جعلان بني بو حسن", en: "Jalan Bani Bu Hassan" },
+        coordinates: [21.8333, 59.2333],
+      },
+      {
+        id: "jalan_bani_bu_ali",
+        name: { ar: "جعلان بني بو علي", en: "Jalan Bani Bu Ali" },
+        coordinates: [21.8, 59.1333],
+      },
+      {
+        id: "masirah",
+        name: { ar: "مصيرة", en: "Masirah" },
+        coordinates: [20.6667, 58.8833],
+      },
+    ],
+  },
+  {
+    id: "north_al_sharqiyah",
+    name: { ar: "محافظة شمال الشرقية", en: "North Al Sharqiyah Governorate" },
+    coordinates: [22.6833, 58.5333],
+    wilayats: [
+      {
         id: "ibra",
         name: { ar: "إبراء", en: "Ibra" },
         coordinates: [22.6833, 58.5333],
@@ -296,6 +323,16 @@ export const omanGovernorates = [
         id: "al_mudhaibi",
         name: { ar: "المضيبي", en: "Al Mudhaibi" },
         coordinates: [22.8833, 58.7667],
+      },
+      {
+        id: "bidiyah",
+        name: { ar: "بدية", en: "Bidiyah" },
+        coordinates: [22.45, 58.85],
+      },
+      {
+        id: "al_qabil",
+        name: { ar: "القابل", en: "Al Qabil" },
+        coordinates: [22.35, 59.0],
       },
       {
         id: "wadi_bani_khalid",
@@ -307,37 +344,10 @@ export const omanGovernorates = [
         name: { ar: "دماء والطائيين", en: "Dima Wa Taeen" },
         coordinates: [22.2833, 59.65],
       },
-    ],
-  },
-  {
-    id: "south_al_sharqiyah",
-    name: { ar: "محافظة جنوب الشرقية", en: "South Al Sharqiyah Governorate" },
-    coordinates: [20.65, 58.0833],
-    wilayats: [
       {
-        id: "sur_south",
-        name: { ar: "صور", en: "Sur" },
-        coordinates: [22.5667, 59.5289],
-      },
-      {
-        id: "al_ashkharah",
-        name: { ar: "الأشخرة", en: "Al Ashkharah" },
-        coordinates: [20.6167, 59.4833],
-      },
-      {
-        id: "masirah",
-        name: { ar: "مصيرة", en: "Masirah" },
-        coordinates: [20.6667, 58.8833],
-      },
-      {
-        id: "jalan_bani_bu_hassan",
-        name: { ar: "جعلان بني بو حسن", en: "Jalan Bani Bu Hassan" },
-        coordinates: [21.8333, 59.2333],
-      },
-      {
-        id: "jalan_bani_bu_ali",
-        name: { ar: "جعلان بني بو علي", en: "Jalan Bani Bu Ali" },
-        coordinates: [21.8, 59.1333],
+        id: "sinaw",
+        name: { ar: "سناو", en: "Sinaw" },
+        coordinates: [22.15, 58.1833],
       },
     ],
   },
@@ -374,14 +384,14 @@ export const omanGovernorates = [
         coordinates: [19.8667, 56.3167],
       },
       {
-        id: "al_duqm",
-        name: { ar: "الدقم", en: "Al Duqm" },
-        coordinates: [19.6667, 57.9],
-      },
-      {
         id: "mahout",
         name: { ar: "محوت", en: "Mahout" },
         coordinates: [18.9167, 57.1833],
+      },
+      {
+        id: "al_duqm",
+        name: { ar: "الدقم", en: "Al Duqm" },
+        coordinates: [19.6667, 57.9],
       },
       {
         id: "al_jazer",
