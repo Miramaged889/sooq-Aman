@@ -61,8 +61,8 @@ const Register = () => {
     if (!formData.phone || formData.phone.replace(/\s/g, "").length !== 8) {
       newErrors.phone =
         language === "ar"
-          ? "يرجى إدخال رقم هاتف صحيح"
-          : "Please enter a valid phone number";
+          ? "يرجى إدخال رقم هاتف صحيح (8 أرقام)"
+          : "Please enter a valid phone number (8 digits)";
     }
 
     if (!isPhoneVerified) {

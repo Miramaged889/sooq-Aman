@@ -32,7 +32,7 @@ const PhoneInput = ({
     // Remove all non-digits
     const digits = input.replace(/\D/g, "");
 
-    // Format as 9X XXX XXX for Oman numbers
+    // Format as XX XXX XXX for Oman numbers
     if (digits.length <= 2) return digits;
     if (digits.length <= 5) return `${digits.slice(0, 2)} ${digits.slice(2)}`;
     if (digits.length <= 8)
@@ -147,7 +147,7 @@ const PhoneInput = ({
             type="tel"
             value={phoneNumber}
             onChange={handlePhoneChange}
-            placeholder={language === "ar" ? "9X XXX XXX" : "9X XXX XXX"}
+            placeholder={language === "ar" ? "XX XXX XXX" : "XX XXX XXX"}
             className={`
               flex-1 px-4 py-3 border border-gray-300 rounded-r-lg
               focus:ring-2 focus:ring-primary focus:border-transparent
@@ -175,8 +175,8 @@ const PhoneInput = ({
           }`}
         >
           {language === "ar"
-            ? "أدخل رقم هاتفك العُماني (8 أرقام تبدأ بـ 9)"
-            : "Enter your Omani phone number (8 digits starting with 9)"}
+            ? "أدخل رقم هاتفك العُماني (8 أرقام)"
+            : "Enter your Omani phone number (8 digits)"}
         </p>
       </div>
 
