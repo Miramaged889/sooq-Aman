@@ -69,28 +69,28 @@ const AdCard = memo(({ ad, className = "", onFavoriteChange }) => {
     );
   };
 
-  const handleShareClick = async () => {
-    trackClick("share");
-    const url = `${window.location.origin}/ad/${ad.id}`;
+  // const handleShareClick = async () => {
+  //   trackClick("share");
+  //   const url = `${window.location.origin}/ad/${ad.id}`;
 
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: ad.title[language],
-          text: ad.description[language].substring(0, 100),
-          url: url,
-        });
-      } catch {
-        // Fallback to clipboard
-        navigator.clipboard.writeText(url);
-        // You could show a toast here
-      }
-    } else {
-      // Fallback to clipboard
-      navigator.clipboard.writeText(url);
-      // You could show a toast here
-    }
-  };
+  //   if (navigator.share) {
+  //     try {
+  //       await navigator.share({
+  //         title: ad.title[language],
+  //         text: ad.description[language].substring(0, 100),
+  //         url: url,
+  //       });
+  //     } catch {
+  //       // Fallback to clipboard
+  //       navigator.clipboard.writeText(url);
+  //       // You could show a toast here
+  //     }
+  //   } else {
+  //     // Fallback to clipboard
+  //     navigator.clipboard.writeText(url);
+  //     // You could show a toast here
+  //   }
+  // };
 
   const handleFavoriteClick = () => {
     if (isFavorite) {
@@ -110,74 +110,135 @@ const AdCard = memo(({ ad, className = "", onFavoriteChange }) => {
   return (
     <motion.div
       id={`ad-${ad.id}`}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      whileHover={{ y: -4 }}
-      className={`card overflow-hidden ${className}`}
+      initial={{ opacity: 0, y: 20, scale: 0.9 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      whileHover={{
+        y: -8,
+        scale: 1.02,
+        boxShadow: "0 20px 40px rgba(0,0,0,0.15)",
+      }}
+      whileTap={{ scale: 0.98 }}
+      transition={{
+        type: "spring",
+        stiffness: 100,
+        damping: 15,
+      }}
+      className={`card overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 ${className}`}
       dir={isRTL ? "rtl" : "ltr"}
     >
       {/* Image */}
       <div className="relative h-48 bg-gray-200 overflow-hidden">
-        <img
+        <motion.img
           src={ad.images[0]}
           alt={ad.title[language]}
-          className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+          className="w-full h-full object-cover"
           loading="lazy"
+          whileHover={{ scale: 1.1 }}
+          transition={{ duration: 0.3 }}
         />
         {/* Favorites Button */}
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={handleFavoriteClick}
-          className={`absolute top-2 ${
-            isRTL ? "right-2" : "left-2"
-          } bg-white/90 hover:bg-white`}
+        <motion.div
+          initial={{ opacity: 0, scale: 0 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.2 }}
         >
-          <Heart
-            className={`h-4 w-4 ${
-              isFavorite ? "text-red-500 fill-current" : "text-gray-600"
-            }`}
-          />
-        </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleFavoriteClick}
+            className={`absolute top-2 ${
+              isRTL ? "right-2" : "left-2"
+            } bg-white/90 hover:bg-white shadow-lg hover:shadow-xl transition-all duration-200`}
+          >
+            <motion.div
+              whileHover={{ scale: 1.1, rotate: 5 }}
+              whileTap={{ scale: 0.9 }}
+            >
+              <Heart
+                className={`h-4 w-4 ${
+                  isFavorite ? "text-red-500 fill-current" : "text-gray-600"
+                }`}
+              />
+            </motion.div>
+          </Button>
+        </motion.div>
       </div>
 
       {/* Content */}
       <div className="p-4">
         {/* Badges */}
-        <div className="flex gap-2 mb-3">
+        <motion.div
+          className="flex gap-2 mb-3"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.3 }}
+        >
           {ad.featured && (
-            <Badge variant="sponsored">{t("ads.sponsored")}</Badge>
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 0.4, type: "spring", stiffness: 200 }}
+            >
+              <Badge variant="sponsored">{t("ads.sponsored")}</Badge>
+            </motion.div>
           )}
           {ad.delivery && (
-            <Badge variant="success">
-              {language === "ar" ? "توصيل" : "Delivery"}
-            </Badge>
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 0.5, type: "spring", stiffness: 200 }}
+            >
+              <Badge variant="success">
+                {language === "ar" ? "توصيل" : "Delivery"}
+              </Badge>
+            </motion.div>
           )}
-        </div>
+        </motion.div>
 
         {/* Title */}
-        <Link to={`/ad/${ad.id}`} className="block">
-          <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2 hover:text-primary transition-colors">
-            {ad.title[language]}
-          </h3>
-        </Link>
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+        >
+          <Link to={`/ad/${ad.id}`} className="block">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2 hover:text-primary transition-colors">
+              {ad.title[language]}
+            </h3>
+          </Link>
+        </motion.div>
 
         {/* Price */}
-        <div className="text-xl font-bold text-primary mb-2">
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+          className="text-xl font-bold text-primary mb-2"
+        >
           {ad.price > 0
             ? formatOMR(ad.price)
             : language === "ar"
             ? "اتصل للسعر"
             : "Contact for price"}
-        </div>
+        </motion.div>
 
         {/* Description */}
-        <p className="text-gray-600 text-sm mb-3 line-clamp-2">
+        <motion.p
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6 }}
+          className="text-gray-600 text-sm mb-3 line-clamp-2"
+        >
           {ad.description[language]}
-        </p>
+        </motion.p>
 
         {/* Location and Date */}
-        <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.7 }}
+          className="flex items-center justify-between text-sm text-gray-500 mb-4"
+        >
           <div className="flex items-center">
             <MapPin className={`h-4 w-4 ${isRTL ? "ml-1" : "mr-1"}`} />
             <span>{getRegionName(ad.location, language)}</span>
@@ -186,40 +247,47 @@ const AdCard = memo(({ ad, className = "", onFavoriteChange }) => {
             <Clock className={`h-4 w-4 ${isRTL ? "ml-1" : "mr-1"}`} />
             <span>{formatPostedDate(ad.postedAt)}</span>
           </div>
-        </div>
+        </motion.div>
 
         {/* Action Buttons */}
-        <div
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.8 }}
           className={`flex ${
             isRTL ? "space-x-reverse space-x-2" : "space-x-2"
           }`}
         >
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handlePhoneClick}
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             className="flex-1"
-            icon={Phone}
           >
-            {t("ads.call")}
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleWhatsAppClick}
+            <Button
+              size="sm"
+              onClick={handlePhoneClick}
+              className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white border-0 hover:shadow-lg transition-all duration-200 transform hover:scale-105"
+            >
+              <Phone className={`h-4 w-4 ${isRTL ? "ml-2" : "mr-2"}`} />
+              <span>{t("ads.call")}</span>
+            </Button>
+          </motion.div>
+
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             className="flex-1"
-            icon={MessageCircle}
           >
-            {t("ads.whatsapp")}
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={handleShareClick}
-            icon={Share2}
-            className="px-2"
-          />
-        </div>
+            <Button
+              size="sm"
+              onClick={handleWhatsAppClick}
+              className="w-full  bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white border-0 hover:shadow-lg transition-all duration-200 transform hover:scale-105"
+            >
+              <MessageCircle className={`h-4 w-4 ${isRTL ? "ml-2" : "mr-2"}`} />
+              <span>{t("ads.whatsapp")}</span>
+            </Button>
+          </motion.div>
+        </motion.div>
       </div>
     </motion.div>
   );

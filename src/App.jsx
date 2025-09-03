@@ -5,6 +5,7 @@ import { AuthProvider } from "./state/authContext.jsx";
 import { AdsProvider } from "./state/adsContext.jsx";
 import AppRoutes from "./router/AppRoutes.jsx";
 import Navbar from "./components/layout/Navbar.jsx";
+import CategoriesNavbar from "./components/layout/CategoriesNavbar.jsx";
 import Footer from "./components/layout/Footer.jsx";
 import BottomNavigation from "./components/layout/BottomNavigation.jsx";
 import "./styles/globals.css";
@@ -18,6 +19,7 @@ const AppLayout = () => {
   return (
     <div className="min-h-screen flex flex-col">
       {!isAuthPage && <Navbar />}
+      {!isAuthPage && <CategoriesNavbar />}
       <main className="flex-1 pb-20">
         <AppRoutes />
       </main>
