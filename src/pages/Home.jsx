@@ -385,7 +385,7 @@ const Home = () => {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 md:gap-6">
+          <div className="grid grid-cols-4 gap-2 sm:gap-3 md:gap-4 lg:gap-6">
             {categories.map((category, index) => (
               <motion.div
                 key={category.id}
@@ -407,27 +407,18 @@ const Home = () => {
                 className="group cursor-pointer"
                 onClick={() => handleCategoryClick(category.id)}
               >
-                <div className="bg-white rounded-2xl p-4 md:p-6 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 hover:border-primary/20">
+                <div className="bg-white rounded-xl md:rounded-2xl p-2 sm:p-3 md:p-4 lg:p-6 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 hover:border-primary/20">
                   <motion.div
                     whileHover={{ rotate: 360, scale: 1.1 }}
                     transition={{ duration: 0.6 }}
-                    className={`w-16 h-16 md:w-20 md:h-20 ${category.color} rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg group-hover:shadow-xl transition-all duration-300`}
+                    className={`w-8 h-8 sm:w-10 sm:h-10 md:w-16 md:h-16 lg:w-20 lg:h-20 ${category.color} rounded-lg sm:rounded-xl md:rounded-2xl flex items-center justify-center mx-auto mb-2 sm:mb-3 md:mb-4 shadow-lg group-hover:shadow-xl transition-all duration-300`}
                   >
                     {getIconComponent(category.icon)}
                   </motion.div>
 
-                  <h3 className="font-semibold text-gray-900 mb-2 text-sm md:text-base text-center group-hover:text-primary transition-colors duration-200">
+                  <h3 className="font-semibold text-gray-900 mb-1 sm:mb-2 text-[10px] sm:text-xs md:text-sm lg:text-base text-center group-hover:text-primary transition-colors duration-200">
                     {category.name[language]}
                   </h3>
-
-                  <div className="text-center">
-                    <span className="inline-block bg-gradient-to-r from-primary/10 to-blue-500/10 text-primary font-bold text-xs md:text-sm px-3 py-1 rounded-full">
-                      {category.count.toLocaleString()}
-                    </span>
-                    <p className="text-xs text-gray-500 mt-1">
-                      {language === "ar" ? "إعلان" : "ads"}
-                    </p>
-                  </div>
                 </div>
               </motion.div>
             ))}

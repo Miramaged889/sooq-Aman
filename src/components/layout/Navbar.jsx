@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 // eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
@@ -34,6 +34,24 @@ const Navbar = () => {
     logout();
     setIsUserMenuOpen(false);
   };
+
+  // Close mobile menu on scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      if (isMobileMenuOpen) {
+        setIsMobileMenuOpen(false);
+      }
+      if (isUserMenuOpen) {
+        setIsUserMenuOpen(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [isMobileMenuOpen, isUserMenuOpen]);
 
   return (
     <nav
@@ -217,8 +235,12 @@ const Navbar = () => {
               ))}
 
               {!user && (
-                <div className="px-4 space-y-2">
-                  <Link to="/login" onClick={() => setIsMobileMenuOpen(false)}>
+                <div className="px-4 py-2">
+                  <Link
+                    to="/login"
+                    className="pd-4"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
                     <Button variant="outline" size="sm" className="w-full">
                       {t("nav.login")}
                     </Button>
@@ -226,6 +248,7 @@ const Navbar = () => {
                   <Link
                     to="/register"
                     onClick={() => setIsMobileMenuOpen(false)}
+                    className="block mt-3"
                   >
                     <Button variant="primary" size="sm" className="w-full">
                       {t("nav.register")}

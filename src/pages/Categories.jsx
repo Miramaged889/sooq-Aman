@@ -31,14 +31,10 @@ import {
 import { useI18n } from "../hooks/useI18n.js";
 import { categories } from "../utils/mockData.js";
 import { usePageAnalytics } from "../hooks/useAnalytics.js";
-import { useDeviceType } from "../hooks/useResponsive.js";
 
 const Categories = () => {
   const { t, language } = useI18n();
   const navigate = useNavigate();
-
-  // Responsive hooks for dynamic layout
-  const deviceType = useDeviceType();
 
   usePageAnalytics("Categories");
 
@@ -48,7 +44,7 @@ const Categories = () => {
 
   const getIconComponent = (iconName) => {
     const iconProps = {
-      size: deviceType.includes("mobile") ? 18 : 20,
+      size: 16,
       color: "white",
     };
     switch (iconName) {
@@ -112,26 +108,19 @@ const Categories = () => {
         >
           <div className="flex items-center justify-center gap-3 mb-4">
             <Grid3X3 className="h-8 w-8 text-primary" />
-            <h1 className="text-4xl font-bold text-gray-900">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900">
               {t("categories.title")}
             </h1>
           </div>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
             {language === "ar"
               ? "اختر الفئة التي تبحث عنها أو انشر إعلانك في الفئة المناسبة"
               : "Choose the category you're looking for or post your ad in the right category"}
           </p>
         </motion.div>
 
-        {/* Categories Grid - Fixed 4 columns layout */}
-        <div
-          className="transition-all duration-300 ease-in-out gap-6"
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(4, 1fr)",
-            gap: deviceType.includes("mobile") ? "12px" : "20px",
-          }}
-        >
+        {/* Categories Grid - Always 4 columns responsive layout */}
+        <div className="grid grid-cols-4 gap-2 sm:gap-3 md:gap-4 lg:gap-6 transition-all duration-300 ease-in-out">
           {categories.map((category, index) => (
             <motion.div
               key={category.id}
@@ -139,43 +128,23 @@ const Categories = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
               whileHover={{ y: -8, scale: 1.02 }}
-              className={`bg-white rounded-xl text-center shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer border border-gray-100 ${
-                deviceType.includes("mobile") ? "p-3" : "p-4"
-              }`}
+              className="bg-white rounded-xl text-center shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer border border-gray-100 p-2 sm:p-3 md:p-4"
               onClick={() => handleCategoryClick(category.id)}
             >
               <div
-                className={`${
-                  deviceType.includes("mobile")
-                    ? "w-10 h-10 mb-2"
-                    : "w-12 h-12 mb-3"
-                } ${
-                  category.color
-                } rounded-full flex items-center justify-center mx-auto`}
+                className={`w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 mb-2 sm:mb-2 md:mb-3 ${category.color} rounded-full flex items-center justify-center mx-auto`}
               >
                 {getIconComponent(category.icon)}
               </div>
 
-              <h3
-                className={`font-bold text-gray-900 mb-1 ${
-                  deviceType.includes("mobile") ? "text-xs" : "text-sm"
-                }`}
-              >
+              <h3 className="font-bold text-gray-900 mb-1 text-[10px] sm:text-xs md:text-sm">
                 {category.name[language]}
               </h3>
 
-              <p
-                className={`text-gray-600 ${
-                  deviceType.includes("mobile")
-                    ? "text-xs mb-2"
-                    : "text-xs mb-3"
-                }`}
-              >
+              <p className="text-gray-600 text-[8px] sm:text-xs mb-2 sm:mb-2 md:mb-3">
                 {category.count.toLocaleString()}{" "}
                 {language === "ar" ? "إعلان" : "ads"}
               </p>
-
-              
             </motion.div>
           ))}
         </div>
