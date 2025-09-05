@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 // eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
-import { Menu, X, Globe, User, LogOut } from "lucide-react";
+import { Menu, X, Globe, User, LogOut, Search } from "lucide-react";
 import { useI18n } from "../../hooks/useI18n.js";
 import { useAuth } from "../../hooks/useAuth.js";
 import Button from "../common/Button.jsx";
@@ -15,6 +15,8 @@ const Navbar = () => {
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const activeAdsCount = getActiveAdsCount();
   const isRTL = language === "ar";
@@ -35,6 +37,29 @@ const Navbar = () => {
     setIsUserMenuOpen(false);
   };
 
+  const handleSearchToggle = () => {
+    setIsSearchOpen(!isSearchOpen);
+    if (!isSearchOpen) {
+      // Focus on search input when opening
+      setTimeout(() => {
+        const searchInput = document.getElementById("navbar-search");
+        if (searchInput) searchInput.focus();
+      }, 100);
+    } else {
+      setSearchQuery("");
+    }
+  };
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      // Navigate to search results
+      window.location.href = `/listings?search=${encodeURIComponent(
+        searchQuery.trim()
+      )}`;
+    }
+  };
+
   // Close mobile menu on scroll
   useEffect(() => {
     const handleScroll = () => {
@@ -44,6 +69,10 @@ const Navbar = () => {
       if (isUserMenuOpen) {
         setIsUserMenuOpen(false);
       }
+      if (isSearchOpen) {
+        setIsSearchOpen(false);
+        setSearchQuery("");
+      }
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -51,7 +80,7 @@ const Navbar = () => {
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [isMobileMenuOpen, isUserMenuOpen]);
+  }, [isMobileMenuOpen, isUserMenuOpen, isSearchOpen]);
 
   return (
     <nav
@@ -87,13 +116,21 @@ const Navbar = () => {
               <Link
                 key={item.name}
                 to={item.href}
-                className={`text-sm font-medium transition-colors ${
+                className={`relative text-sm font-medium transition-all duration-300 ${
                   isActive(item.href)
                     ? "text-primary"
                     : "text-gray-600 hover:text-primary"
                 }`}
               >
                 {item.name}
+                {isActive(item.href) && (
+                  <motion.div
+                    layoutId="activeTab"
+                    className="absolute -bottom-1 left-0 right-0 h-0.5 bg-primary rounded-full"
+                    initial={false}
+                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                  />
+                )}
               </Link>
             ))}
           </div>
@@ -104,6 +141,38 @@ const Navbar = () => {
               isRTL ? "space-x-reverse space-x-4" : "space-x-4"
             }`}
           >
+            {/* Search */}
+            <div className="flex items-center">
+              {isSearchOpen ? (
+                <motion.form
+                  initial={{ width: 0, opacity: 0 }}
+                  animate={{ width: "200px", opacity: 1 }}
+                  exit={{ width: 0, opacity: 0 }}
+                  transition={{ duration: 0.3, ease: "easeInOut" }}
+                  onSubmit={handleSearchSubmit}
+                  className="flex items-center"
+                >
+                  <input
+                    id="navbar-search"
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder={language === "ar" ? "ابحث..." : "Search..."}
+                    className="w-full px-3 py-1 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                    dir={isRTL ? "rtl" : "ltr"}
+                  />
+                </motion.form>
+              ) : (
+                <button
+                  onClick={handleSearchToggle}
+                  className="p-2 text-gray-600 hover:text-primary transition-colors"
+                  aria-label="Search"
+                >
+                  <Search className="h-5 w-5" />
+                </button>
+              )}
+            </div>
+
             {/* Language Toggle */}
             <button
               onClick={handleLanguageToggle}
@@ -223,11 +292,15 @@ const Navbar = () => {
                 <Link
                   key={item.name}
                   to={item.href}
-                  className={`block px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+                  className={`block px-4 py-2 text-sm font-medium rounded-lg transition-all duration-300 ${
                     isActive(item.href)
-                      ? "text-primary bg-primary/10"
+                      ? "text-primary bg-primary/10 border-l-4 border-primary"
                       : "text-gray-600 hover:text-primary hover:bg-gray-50"
-                  } ${isRTL ? "text-right" : "text-left"}`}
+                  } ${
+                    isRTL
+                      ? "text-right border-r-4 border-l-0"
+                      : "text-left border-l-4"
+                  }`}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {item.name}
