@@ -12,6 +12,7 @@ import {
   Calendar,
   Eye,
   Star,
+  Shield,
 } from "lucide-react";
 import { useI18n } from "../hooks/useI18n.js";
 import { useAds } from "../hooks/useAds.js";
@@ -284,6 +285,63 @@ const AdDetails = () => {
                       {language === "ar" ? "توصيل" : "Delivery"}
                     </Badge>
                   )}
+                </div>
+              </div>
+
+              {/* Safety Instructions */}
+              <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg border border-blue-200 p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                  <Shield className="h-5 w-5 text-blue-600" />
+                  {language === "ar" ? "تعليمات الأمان" : "Safety Instructions"}
+                </h3>
+                <div className="space-y-3 text-sm">
+                  <div className="flex items-start gap-3">
+                    <div className="w-2 h-2 bg-blue-600 rounded-full mt-2 flex-shrink-0"></div>
+                    <p className="text-gray-700">
+                      {language === "ar"
+                        ? "تأكد من هوية البائع قبل إتمام أي معاملة"
+                        : "Verify seller identity before completing any transaction"}
+                    </p>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="w-2 h-2 bg-blue-600 rounded-full mt-2 flex-shrink-0"></div>
+                    <p className="text-gray-700">
+                      {language === "ar"
+                        ? "لا تدفع مقدماً إلا بعد فحص المنتج شخصياً"
+                        : "Don't pay in advance without inspecting the product in person"}
+                    </p>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="w-2 h-2 bg-blue-600 rounded-full mt-2 flex-shrink-0"></div>
+                    <p className="text-gray-700">
+                      {language === "ar"
+                        ? "التق بالبائع في مكان عام وآمن"
+                        : "Meet the seller in a public and safe location"}
+                    </p>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="w-2 h-2 bg-blue-600 rounded-full mt-2 flex-shrink-0"></div>
+                    <p className="text-gray-700">
+                      {language === "ar"
+                        ? "احتفظ بسجل للرسائل والاتصالات"
+                        : "Keep records of messages and communications"}
+                    </p>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="w-2 h-2 bg-blue-600 rounded-full mt-2 flex-shrink-0"></div>
+                    <p className="text-gray-700">
+                      {language === "ar"
+                        ? "إذا كان السعر يبدو جيداً جداً، فاحذر من الاحتيال"
+                        : "If the price seems too good to be true, beware of scams"}
+                    </p>
+                  </div>
+                </div>
+                <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                  <p className="text-xs text-yellow-800 font-medium">
+                    {language === "ar"
+                      ? "⚠️ في حالة الشك، لا تتردد في الإبلاغ عن الإعلان"
+                      : "⚠️ When in doubt, don't hesitate to report the ad"}
+                  </p>
                 </div>
               </div>
             </div>

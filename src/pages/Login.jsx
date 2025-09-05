@@ -4,7 +4,6 @@ import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   LogIn,
-  User,
   Lock,
   Eye,
   EyeOff,
@@ -13,6 +12,7 @@ import {
   ArrowRight,
   ArrowLeft,
   Globe,
+  Settings,
 } from "lucide-react";
 import { useI18n } from "../hooks/useI18n.js";
 import { useAuth } from "../hooks/useAuth.js";
@@ -28,7 +28,6 @@ const Login = () => {
   const { login, loading } = useAuth();
   const [formData, setFormData] = useState({
     phone: "",
-    email: "",
     password: "",
   });
   const [error, setError] = useState("");
@@ -47,11 +46,7 @@ const Login = () => {
       // Test button weight - add some delay to simulate processing
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      const result = await login(
-        formData.phone,
-        formData.email,
-        formData.password
-      );
+      const result = await login(formData.phone, formData.password);
       if (result.success) {
         navigate("/");
       } else {
@@ -198,7 +193,7 @@ const Login = () => {
                     }`}
                   >
                     <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
-                      <User className="h-5 w-5 text-purple-600" />
+                      <Settings className="h-5 w-5 text-purple-600" />
                     </div>
                     <span className="text-gray-700">
                       {language === "ar"
@@ -276,29 +271,6 @@ const Login = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.15 }}
                 >
-                  <FormInput
-                    label={
-                      language === "ar" ? "البريد الإلكتروني" : "Email Address"
-                    }
-                    name="email"
-                    type="email"
-                    value={formData.email}
-                    onChange={(e) => handleInputChange("email", e.target.value)}
-                    placeholder={
-                      language === "ar"
-                        ? "أدخل بريدك الإلكتروني"
-                        : "Enter your email address"
-                    }
-                    required
-                    icon={User}
-                  />
-                </motion.div>
-
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2 }}
-                >
                   <div className="relative">
                     <FormInput
                       label={language === "ar" ? "كلمة المرور" : "Password"}
@@ -335,7 +307,7 @@ const Login = () => {
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.25 }}
+                  transition={{ delay: 0.2 }}
                 >
                   <Button
                     type="submit"
